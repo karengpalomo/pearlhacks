@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Pressable } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 export default function Profile() {
@@ -40,11 +41,21 @@ export default function Profile() {
                 {interests.map((interest) => {
                     return <View style={styles.tag}><Text style={styles.tagtext}>{interest}</Text></View>;
                 })}
+                <Pressable style={styles.addButton} onPress={() => alert('pressed add interest')}>
+                    <Text style={styles.tagtext}> + </Text>
+                </Pressable>
             </View>
         </View>
         <View style={styles.container}>
             <Text style={styles.header2}>Friends</Text>
-            <Text style={styles.p}>No friends yet</Text>
+            <View style={styles.buttons}>
+                <Pressable style={styles.friendButton} onPress={() => alert('pressed add friends')}>
+                    <Text style={styles.tagtext}><Ionicons name='add-circle-outline'/> Add friends</Text>
+                </Pressable>
+                <Pressable style={styles.friendButton} onPress={() => alert('pressed view friends')}>
+                    <Text style={styles.tagtext}><Ionicons name='eye-outline' /> View friends</Text>
+                </Pressable>
+            </View>
         </View>
       <StatusBar style="auto" />
     </View>
@@ -86,12 +97,9 @@ const styles = StyleSheet.create({
     },
     tag: {
         backgroundColor: '#F2C5BE',
-        borderRadius: 5,
-        padding: 5,
+        borderRadius: 10,
+        padding: 7,
         margin: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
     },
     tagtext: {
         color: '#FFFF',
@@ -100,7 +108,34 @@ const styles = StyleSheet.create({
     info: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        margin: 10,
+    },
+    friendButton: {
+        backgroundColor: '#F2C5BE',
+        borderRadius: 5,
+        padding: 10,
+        margin: 10,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        borderColor: '#C4AAA6',
+        borderWidth: 0.5,
+    },
+    buttons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    addButton: {
+        backgroundColor: '#C4AAA6',
+        borderRadius: 10,
+        padding: 7,
         margin: 5,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+
     },
 
 });

@@ -6,6 +6,7 @@ import ItinerariesScreen from './pages/Itineraries';
 import FriendsScreen from './pages/Friends';
 import ChatScreen from './pages/Chat';
 import ProfileScreen from './pages/Profile';
+import FilterScreen from './pages/Filter';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,7 +17,7 @@ const Stack = createStackNavigator();
 function Root() {
   return (
     <Tab.Navigator
-    initialRouteName='Home'
+    initialRouteName='Search'
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
@@ -60,6 +61,7 @@ export default function App() {
     <NavigationContainer independent={true}>
       <Stack.Navigator>
         <Stack.Screen options={{headerShown: false}} name="Back" component={Root}/>
+        <Stack.Screen name="Filter" component={FilterScreen} />
       </Stack.Navigator>
     </NavigationContainer>
     </View>
