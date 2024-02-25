@@ -19,7 +19,7 @@ def filter(
         print("❌" + str(e))
         raise HTTPException(status_code=404, detail=str(e))
     
-@api.post("/users/{user_id}/add_friend/{friend_id}")
+@api.post("/users/{user_id}/add_friend/{friend_id}/")
 def add_friend(user_id: int, friend_id: int, user_svc = UserService()):
     user = user_svc.add_friend(user_id, friend_id)
     if not user:

@@ -7,7 +7,7 @@ from ..entities import UserEntity, TagEntity, PlaceEntity
 from ..tag_data import getYelpTags
 from .user_helper import *
 from ..api.yelp import *
-from place import PlaceService
+from .place import PlaceService
 
 
 class UserService:

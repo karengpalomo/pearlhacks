@@ -16,7 +16,7 @@ class GroupEntity(EntityBase):
     members = relationship('UserEntity',
                            secondary=group_member_table,
                            primaryjoin=id == group_member_table.c.group_id,
-                           secondaryjoin=id == group_member_table.c.user_id,
+                           secondaryjoin=id == group_member_table.c.member_id,
                            backref='group_members')
 
     @classmethod

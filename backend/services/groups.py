@@ -4,7 +4,8 @@ from sqlalchemy import select, insert
 from sqlalchemy.orm import Session
 from ..database import db_session
 from ..models import Place, PlaceTag
-from ..entities import PlaceEntity, GroupEntity, UserEntity
+from ..entities.group_entity import GroupEntity
+from ..entities.user_entity import UserEntity
 from ..entities.group_member_entity import group_member_table
 
 class GroupService:

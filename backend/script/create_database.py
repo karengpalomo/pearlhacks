@@ -9,7 +9,8 @@ Usage: python3 -m script.create_database
 import sqlalchemy
 import sys
 
-engine = sqlalchemy.create_engine("postgresql+psycopg2://postgres:pearlhacks@152.23.204.203:5432", echo=True)
+engine = sqlalchemy.create_engine("postgresql+psycopg2://postgres@localhost:5432", echo=True)
+
 
 
 with engine.connect() as connection:
