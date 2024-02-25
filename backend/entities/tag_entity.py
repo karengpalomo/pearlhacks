@@ -5,10 +5,6 @@ from backend.models.tag import Tag
 from typing import Self
 
 
-__authors__ = ['Aryonna Rice']
-__copyright__ = 'Copyright 2023'
-__license__ = 'MIT'
-
 class TagEntity(EntityBase):
     __tablename__ = 'tag'
 
