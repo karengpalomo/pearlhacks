@@ -1,24 +1,79 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, TextInput, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RNPickerSelect from 'react-native-picker-select';
-import Slider from '@react-native-community/slider';
+import * as Location from 'expo-location';
+
 
 
 export default function App() {
-    const tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
+    const tags = ['Active', 'Artsy', 'Beauty', 'Quick Snacks', 'Restaurants', 'Shopping', 'Nightlife'];
+    const budgets = ['$-$$', '$$-$$$', '$$$-$$$$'];
     const [selectedTags, setSelectedTags] = useState([]);
+    const [selectedBudget, setSelectedBudget] = useState([]);
+    const [budget, setNewBudget] = useState([]);
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [budget, setBudget] = useState(0);
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+    const [timeofday, setTimeOfDay] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+          
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+          }
+    
+          let location = await Location.getCurrentPositionAsync({});
+          setLocation(location);
+            setLatitude(location.coords.latitude);
+            setLongitude(location.coords.longitude);
+        })();
+      }, []);
+
+      let text = 'Waiting..';
+      if (errorMsg) {
+        text = errorMsg;
+      } else if (location) {
+        text = JSON.stringify(location);
+        console.log(longitude);
+        console.log(latitude);
+      }
+
+
+
   
     const onChange = (event, selectedDate) => {
       const currentDate = selectedDate;
       setShow(true);
       setDate(currentDate);
     };
+    
+    const setBudget = (value) => {
+        if (value.length === 0) {
+            setNewBudget([]);
+            return;
+        }
+        else{
+            const firstValue = value[0].split('-');
+            const secondValue = value[value.length - 1].split('-');
+        
+            // Concatenate the first part of the first value with the second part of the second value
+            const newValue = [firstValue[0], secondValue[1]];
+            setNewBudget(newValue);
+            console.log(newValue);
+        }
+    
+        setSelectedBudget(value);
+    }
+
 
     const formattedDate = date.toLocaleDateString('en-US', {
         month: 'long',
@@ -67,10 +122,11 @@ export default function App() {
             <RNPickerSelect
                 style={{ inputIOS: { color: 'pink' }, inputAndroid: { color: 'pink' }, }}
                 placeholder={{ label: 'Select a time of day', value: null }}
-                onValueChange={(value) => console.log(value)}
+                onValueChange={(value) => setTimeOfDay(value)}
                 items={[
                     { label: 'Morning', value: 'morning' },
                     { label: 'Afternoon', value: 'afternoon'},
+                    { label: 'Evening', value: 'evening'},
                     { label: 'Night', value: 'night' },
                 ]}
             />
@@ -78,22 +134,24 @@ export default function App() {
       </View>
       <View style={styles.section}>
         <Text style={styles.header2}>Cost Range</Text>
-        {/* slider to select a cost range */}
-        <Slider
-            style={{width: 300, height: 40}}
-            minimumValue={0}
-            maximumValue={100}
-            minimumTrackTintColor="pink"
-            maximumTrackTintColor="#000000"
-            renderStepNumber={true}
-            tapToSeek={true}
-            StepMarker = {true}
-            step={5}
-            onSlidingComplete={(value) => setBudget(value)}
-        />
-        <Text>
-            $0 - ${budget}
-        </Text>
+        <View style={styles.tags}>
+            {/* make each tag a button that can be selected */}
+            {budgets.map(tag => (
+                <Button
+                    key={tag}
+                    title={tag}
+                    onPress={() => {
+                        if (selectedBudget.includes(tag)) {
+                            setBudget(selectedBudget.filter(t => t !== tag));
+                        } else {
+                            setBudget([...selectedBudget, tag]);
+                        }
+                    }}
+                    // set the style to be pink if selected, otherwise purple
+                    color={selectedBudget.includes(tag) ? 'pink' : 'gray'}
+                />
+            ))}
+        </View>
       </View>
         <View style={styles.section}>
             <Text style={styles.header2}>Number of People</Text>
@@ -105,15 +163,16 @@ export default function App() {
         </View>
         {/* make a submit button for date, budget, time of day, and tags selected */}
         <Pressable
-            style={{backgroundColor: 'pink', padding: 10, borderRadius: 10, margin: 10, height: 40, shadowColor: 'gray',shadowOpacity: 0.5, shadowOffset: { width: 0, height: 2 },
+            style={{backgroundColor: 'pink', padding: 10, borderRadius: 10, margin: 10, height: 40, shadowColor: 'gray',shadowOpacity: 0.5, marginBottom:40, shadowOffset: { width: 0, height: 2 },
             }}
             onPress={() => console.log('submit')}
         >
             <Text style={styles.btnText}>Submit</Text>
         </Pressable>
+        <Text>Your location: {longitude}, {latitude}</Text>
       <StatusBar style="auto" />
     </View>
-  );
+  ); 
 }
 
 const styles = StyleSheet.create({
@@ -147,6 +206,8 @@ const styles = StyleSheet.create({
         color: '#FFFF',
         fontSize: 16,
         textAlign: 'center',
-
+    },
+    budgetButtons: {
+        flexDirection: 'row',
     }
 });

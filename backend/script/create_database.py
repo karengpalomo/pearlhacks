@@ -9,9 +9,7 @@ Usage: python3 -m script.create_database
 import sqlalchemy
 import sys
 
-
-engine = sqlalchemy.create_engine("postgresql+psycopg2://postgres:MasterYoshi1!@152.23.211.102:5432", echo=True)
-"""Application-level SQLAlchemy database engine."""
+engine = sqlalchemy.create_engine("postgresql+psycopg2://postgres:pearlhacks@152.23.204.203:5432", echo=True)
 
 
 with engine.connect() as connection:
