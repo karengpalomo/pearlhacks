@@ -3,33 +3,13 @@ from ..models.place_tag import PlaceTag
 import math
 from datetime import datetime
 
-DATE_FORMAT = "%d-%m-%Y"
-
-def to_place_tag_model(tags: list[str]) -> list[PlaceTag]:
-    place_tags = [PlaceTag(name=tag) for tag in tags]
-    return place_tags
-
-def to_place_model(businesses) -> list[Place]:
-    places = []
-    for business in businesses:
-        name = business["name"]
-        longitude = business["coordinates"]["longitude"]
-        latitude = business["coordinates"]["latitude"]
-        address = business["location"]["address1"]
-        rating = business["rating"]
-        categories = business["categories"]
-        place_tags_str = [category["alias"] for category in categories]
-        place_tags = to_place_tag_model(place_tags_str)
-        place = Place(name=name, longitude=longitude, latitude=latitude, address=address, rating=rating, tags=place_tags)
-        places.append(place)
-    return places
+DATE_FORMAT = "%B %d, %Y"
 
 def get_business_ids(yelp_places) -> list[str]:
     businesses = yelp_places["businesses"]
     ids = [business["id"] for business in businesses]
     return ids
     
-
 
 def to_meters(miles: int) -> int:
     return math.floor(miles * 1609.34)
