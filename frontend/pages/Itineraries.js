@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Modal from "react-native-modal";
 import RNPickerSelect from 'react-native-picker-select';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios';
 
 export default function Itineraries() {
     const [itineraries, setItineraries] = useState(['Itinerary 1', 'Itinerary 2', 'Itinerary 3']);
@@ -20,7 +21,6 @@ export default function Itineraries() {
     const [itineraryGroup, setItineraryGroup] = useState('');
     const [itineraryDate, setItineraryDate] = useState('');
     const [itinIcon, setItinIcon] = useState('');
-
 
     const onChange = (event, selectedDate) => {
         setItineraryDate(selectedDate);
