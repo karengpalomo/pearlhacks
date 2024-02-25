@@ -14,8 +14,7 @@ def filter(
 ):
     try:
         # Filter based on the provided parameters, excluding any that are None
-        return user_svc.filter(tags=params.tags, distance=params.distance,
-                               prices=params.price, availability=params.availability)
+        return user_svc.filter(search=params)
     except Exception as e:
         print("❌" + str(e))
         raise HTTPException(status_code=404, detail=str(e))
@@ -36,7 +35,7 @@ def remove_friend(user_id: int, friend_id: int, user_svc = UserService()):
 
 @api.put("/users/{user_id}/edit-profile")
 def edit_profile(user_id: int, edit_request: EditProfileRequest, user_svc = UserService()):
-    user = user_svc.edit_profile(user_id, edit_request.bio, edit_request.location, edit_request.tags_to_add, edit_request.tags_to_remove)
+    user = user_svc.edit_profile(user_id, edit_request.bio, edit_request.location, edit_request.tags)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user.to_model()

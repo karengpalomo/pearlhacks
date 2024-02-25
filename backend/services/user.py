@@ -1,9 +1,8 @@
-from typing import Tuple
 from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from ..database import db_session
-from ..models import User, Tag, Place
+from ..models import User, Tag, Place, SearchParams
 from ..entities import UserEntity, TagEntity, PlaceEntity
 from ..tag_data import getYelpTags
 from .user_helper import *
@@ -48,28 +47,31 @@ class UserService:
             start, end = open_hours_on_yelp_day["start"], open_hours_on_yelp_day["end"]
             start_time, end_time = time_ranges[time_of_day]
             if start_time < end and end_time > start:
-                    filtered_businesses.append(business)
-        return to_place_model(filtered_businesses)
+                    filtered_businesses.append(business)           
+        return PlaceService.to_place_model(filtered_businesses)
             
             
-    def filter(self, tags, distance, prices, availability) -> list[Place]:
+    def filter(self, search: SearchParams) -> list[Place]:
         params = {}
-        yelp_categories = getYelpTags(tags=tags)
+        params["latitude"] = search.latitude
+        params["longitude"] = search.longitude
+        yelp_categories = getYelpTags(tags=search.tags)
         params["categories"] = yelp_categories
-        if distance:
-            distance_meters = to_meters(distance)
+        if search.distance:
+            distance_meters = to_meters(search.distance)
             params["radius"] = distance_meters
-        if prices:
-            yelp_prices = get_yelp_prices(prices)
+        if search.prices:
+            yelp_prices = get_yelp_prices(search.prices)
             params["price"] = yelp_prices
         businesses = business_search(params=params)
-        if availability:
+        if search.availability:
             business_ids = get_business_ids(businesses=businesses)
-            date, time_of_day = availability
+            date, time_of_day = search.availability
             weekday = to_yelp_weekday(date=date)
             return self.filter_by_availability(business_ids=business_ids, yelp_day=weekday, time_of_day=time_of_day)
         else:
-            return to_place_model(businesses["businesses"])
+            
+            return PlaceService.to_place_model(businesses["businesses"])
     
     def add_friend(self, user_id: int, friend_id: int):
         user = self._session.query(UserEntity).filter(UserEntity.id == user_id).first()
@@ -106,8 +108,7 @@ class UserService:
         if location is not None:
             user.location = location
         if tags is not None:
-            all_tags = {tag.name: tag for tag in self._session.query(TagEntity).all()}
-            tags_to_add = [all_tags[tag_name] for tag_name in tags if tag_name in all_tags]
+            tags_to_add = [Tag(name= tag) for tag in tags]
             user.tags = tags_to_add
         self._session.commit()
         return user
