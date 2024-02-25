@@ -1,9 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, TextInput, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RNPickerSelect from 'react-native-picker-select';
+import * as Location from 'expo-location';
+
 
 
 export default function App() {
@@ -14,7 +16,37 @@ export default function App() {
     const [budget, setNewBudget] = useState([]);
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [isPressed, setIsPressed] = useState(false);
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
+
+    useEffect(() => {
+        (async () => {
+          
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+          }
+    
+          let location = await Location.getCurrentPositionAsync({});
+          setLocation(location);
+            setLatitude(location.coords.latitude);
+            setLongitude(location.coords.longitude);
+        })();
+      }, []);
+
+      let text = 'Waiting..';
+      if (errorMsg) {
+        text = errorMsg;
+      } else if (location) {
+        text = JSON.stringify(location);
+        console.log(longitude);
+        console.log(latitude);
+      }
+
+
 
   
     const onChange = (event, selectedDate) => {
@@ -129,15 +161,16 @@ export default function App() {
         </View>
         {/* make a submit button for date, budget, time of day, and tags selected */}
         <Pressable
-            style={{backgroundColor: 'pink', padding: 10, borderRadius: 10, margin: 10, height: 40, shadowColor: 'gray',shadowOpacity: 0.5, shadowOffset: { width: 0, height: 2 },
+            style={{backgroundColor: 'pink', padding: 10, borderRadius: 10, margin: 10, height: 40, shadowColor: 'gray',shadowOpacity: 0.5, marginBottom:40, shadowOffset: { width: 0, height: 2 },
             }}
             onPress={() => console.log('submit')}
         >
             <Text style={styles.btnText}>Submit</Text>
         </Pressable>
+        <Text>Your location: {longitude}, {latitude}</Text>
       <StatusBar style="auto" />
     </View>
-  );
+  ); 
 }
 
 const styles = StyleSheet.create({
@@ -171,7 +204,6 @@ const styles = StyleSheet.create({
         color: '#FFFF',
         fontSize: 16,
         textAlign: 'center',
-
     },
     budgetButtons: {
         flexDirection: 'row',
