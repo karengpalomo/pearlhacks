@@ -1,14 +1,14 @@
 from pydantic import BaseModel
-from ..models.place_tag import PlaceTag
-
-
+from typing import List, Optional
+from .place_tag import PlaceTag
 
 class Place(BaseModel):
-    id: int | None = None
+    id: Optional[int] = None
     name: str
     longitude: float
     latitude: float
     address: str
     rating: int
-    tags: ['PlaceTag'] = []
-    photo_url: str 
+    tags: List[PlaceTag] = []
+    photo_url: str
+

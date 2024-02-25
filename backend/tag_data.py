@@ -1,5 +1,5 @@
 # Key: our name , value: yelps name
-from models import Tag
+from .models import Tag
 
 tagmap = {
     "Active" : "active", 

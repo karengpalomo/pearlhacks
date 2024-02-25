@@ -38,7 +38,7 @@ class UserEntity(EntityBase):
                            backref='user_friends')
     favorites = relationship('PlaceEntity',
                              secondary=user_favorites_table,
-                             back_populates='favorited_by')
+                             back_populates='users')
     
 
     @classmethod
@@ -55,7 +55,8 @@ class UserEntity(EntityBase):
             age=model.age,
             bio=model.bio,
             tags=[UserEntity.from_model(tag) for tag in model.tags],
-            friends=[UserEntity.from_model(friend) for friend in model.friends]
+            friends=[UserEntity.from_model(friend) for friend in model.friends],
+            favorites = [PlaceEntity.from_model(place) for place in model.favorites]
         )
 
     def to_model(self) -> User:
@@ -71,9 +72,11 @@ class UserEntity(EntityBase):
             age=self.age,
             bio=self.bio,
             tags=[tag.to_model() for tag in self.tags],
-            friends=[friend.to_model() for friend in self.friends]
+            friends=[friend.to_model() for friend in self.friends],
+            favorites = [place.to_model() for place in self.favorites]
         )
 
 
 #import entities
 from backend.entities.tag_entity import TagEntity
+from backend.entities.place_entity import PlaceEntity

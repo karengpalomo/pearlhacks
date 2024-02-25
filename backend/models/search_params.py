@@ -1,5 +1,7 @@
 from typing import Optional, List
-from pydantic import BaseModel, Annotated, Field
+from pydantic import BaseModel, Field
+from typing import Annotated
+
 
 class SearchParams(BaseModel):
     tags: Optional[List[str]] = None
