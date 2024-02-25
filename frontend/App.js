@@ -7,6 +7,8 @@ import FriendsScreen from './pages/Friends';
 import ChatScreen from './pages/Chat';
 import ProfileScreen from './pages/Profile';
 import FilterScreen from './pages/Filter';
+import Itineraries from './pages/Itineraries';
+import AddItineraries from './components/AddItineraries';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';

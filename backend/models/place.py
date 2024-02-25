@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from ..models.place_tag import PlaceTag
+
 
 
 class Place(BaseModel):
@@ -10,4 +12,4 @@ class Place(BaseModel):
     address: str
     rating: int
     hours: ['WeekdayTime'] = []
-    tags: ['Tag'] = []
+    tags: ['PlaceTag'] = []
