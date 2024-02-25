@@ -1,0 +1,3 @@
+uvicorn command: python -m uvicorn backend.main:app --host 0.0.0.0 --port 80 --reload (RUN FROM ROOT)
+venv command: source venv/bin/activate
+fastapi url: http://0.0.0.0:80/docs
