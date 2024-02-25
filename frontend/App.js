@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import SearchScreen from './pages/Search';
 import ItinerariesScreen from './pages/Itineraries';
 import FriendsScreen from './pages/Friends';
-import ChatScreen from './pages/Chat';
 import ProfileScreen from './pages/Profile';
 import FilterScreen from './pages/Filter';
 import Itineraries from './pages/Itineraries';
@@ -32,8 +31,6 @@ function Root() {
             iconName = focused ? 'list-circle' : 'list-circle-outline';
           } else if (route.name === 'Friends') {
             iconName = focused ? 'people-circle' : 'people-circle-outline';
-          } else if (route.name === 'Chat') {
-            iconName = focused ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person-circle' : 'person-circle-outline';
           }
@@ -51,7 +48,6 @@ function Root() {
       <Tab.Screen name="Search" component={SearchScreen}/>
       <Tab.Screen name="Itineraries" component={ItinerariesScreen} />
       <Tab.Screen name="Friends" component={FriendsScreen} />
-      <Tab.Screen name="Chat" component={ChatScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

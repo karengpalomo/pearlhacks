@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView, Pressable, Button, TextInput} from 'react-native';
 import Modal from "react-native-modal";
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
+import axios from 'axios';
 
 
 export default function App() {
@@ -55,6 +56,16 @@ export default function App() {
         }
 
     ]
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/api/users/0/friends')
+        .then((response) => {
+            console.log(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      }, []);
 
   return (
     <View style={styles.container}>

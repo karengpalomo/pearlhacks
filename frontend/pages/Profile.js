@@ -46,17 +46,6 @@ export default function Profile() {
                 </Pressable>
             </View>
         </View>
-        <View style={styles.container}>
-            <Text style={styles.header2}>Friends</Text>
-            <View style={styles.buttons}>
-                <Pressable style={styles.friendButton} onPress={() => alert('pressed add friends')}>
-                    <Text style={styles.tagtext}><Ionicons name='add-circle-outline'/> Add friends</Text>
-                </Pressable>
-                <Pressable style={styles.friendButton} onPress={() => alert('pressed view friends')}>
-                    <Text style={styles.tagtext}><Ionicons name='eye-outline' /> View friends</Text>
-                </Pressable>
-            </View>
-        </View>
       <StatusBar style="auto" />
     </View>
   );
