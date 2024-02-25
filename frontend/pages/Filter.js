@@ -4,21 +4,43 @@ import React, { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import RNPickerSelect from 'react-native-picker-select';
-import Slider from '@react-native-community/slider';
 
 
 export default function App() {
-    const tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
+    const tags = ['Active', 'Artsy', 'Beauty', 'Quick Snacks', 'Restaurants', 'Shopping', 'Nightlife'];
+    const budgets = ['$-$$', '$$-$$$', '$$$-$$$$'];
     const [selectedTags, setSelectedTags] = useState([]);
+    const [selectedBudget, setSelectedBudget] = useState([]);
+    const [budget, setNewBudget] = useState([]);
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
-    const [budget, setBudget] = useState(0);
+    const [isPressed, setIsPressed] = useState(false);
+
   
     const onChange = (event, selectedDate) => {
       const currentDate = selectedDate;
       setShow(true);
       setDate(currentDate);
     };
+    
+    const setBudget = (value) => {
+        if (value.length === 0) {
+            setNewBudget([]);
+            return;
+        }
+        else{
+            const firstValue = value[0].split('-');
+            const secondValue = value[value.length - 1].split('-');
+        
+            // Concatenate the first part of the first value with the second part of the second value
+            const newValue = [firstValue[0], secondValue[1]];
+            setNewBudget(newValue);
+            console.log(newValue);
+        }
+    
+        setSelectedBudget(value);
+    }
+
 
     const formattedDate = date.toLocaleDateString('en-US', {
         month: 'long',
@@ -78,22 +100,24 @@ export default function App() {
       </View>
       <View style={styles.section}>
         <Text style={styles.header2}>Cost Range</Text>
-        {/* slider to select a cost range */}
-        <Slider
-            style={{width: 300, height: 40}}
-            minimumValue={0}
-            maximumValue={100}
-            minimumTrackTintColor="pink"
-            maximumTrackTintColor="#000000"
-            renderStepNumber={true}
-            tapToSeek={true}
-            StepMarker = {true}
-            step={5}
-            onSlidingComplete={(value) => setBudget(value)}
-        />
-        <Text>
-            $0 - ${budget}
-        </Text>
+        <View style={styles.tags}>
+            {/* make each tag a button that can be selected */}
+            {budgets.map(tag => (
+                <Button
+                    key={tag}
+                    title={tag}
+                    onPress={() => {
+                        if (selectedBudget.includes(tag)) {
+                            setBudget(selectedBudget.filter(t => t !== tag));
+                        } else {
+                            setBudget([...selectedBudget, tag]);
+                        }
+                    }}
+                    // set the style to be pink if selected, otherwise purple
+                    color={selectedBudget.includes(tag) ? 'pink' : 'gray'}
+                />
+            ))}
+        </View>
       </View>
         <View style={styles.section}>
             <Text style={styles.header2}>Number of People</Text>
@@ -148,5 +172,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
 
+    },
+    budgetButtons: {
+        flexDirection: 'row',
     }
 });
