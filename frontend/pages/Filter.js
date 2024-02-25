@@ -20,6 +20,7 @@ export default function App() {
     const [errorMsg, setErrorMsg] = useState(null);
     const [latitude, setLatitude] = useState(null);
     const [longitude, setLongitude] = useState(null);
+    const [timeofday, setTimeOfDay] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -121,10 +122,11 @@ export default function App() {
             <RNPickerSelect
                 style={{ inputIOS: { color: 'pink' }, inputAndroid: { color: 'pink' }, }}
                 placeholder={{ label: 'Select a time of day', value: null }}
-                onValueChange={(value) => console.log(value)}
+                onValueChange={(value) => setTimeOfDay(value)}
                 items={[
                     { label: 'Morning', value: 'morning' },
                     { label: 'Afternoon', value: 'afternoon'},
+                    { label: 'Evening', value: 'evening'},
                     { label: 'Night', value: 'night' },
                 ]}
             />
