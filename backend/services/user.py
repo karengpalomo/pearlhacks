@@ -28,3 +28,15 @@ class UserService:
            raise Exception("Password is incorrect.") 
         return user
     
+    def filter_by_open( place: [Place]) -> list[Place]:
+        
+        
+        
+    def filter_by_tags(self, tags=list[str]) -> list[Place]:
+        #Fill in with correct location of dev_data
+        yelp_tags 
+    def filter_by_distance(self, distance=int) -> list[Place]:
+    def filter_by_price(self, price: int) -> list[Place]:
+    def filter(availability, tags, distance, price) -> list[Place]:
+        
+        
