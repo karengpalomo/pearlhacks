@@ -4,10 +4,11 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from ..database import db_session
 from ..models import User, Tag, Place
-from ..entities import UserEntity
+from ..entities import UserEntity, TagEntity, PlaceEntity
 from ..tag_data import getYelpTags
 from .user_helper import *
 from ..api.yelp import *
+from place import PlaceService
 
 
 class UserService:
@@ -69,5 +70,67 @@ class UserService:
             return self.filter_by_availability(business_ids=business_ids, yelp_day=weekday, time_of_day=time_of_day)
         else:
             return to_place_model(businesses["businesses"])
+    
+    def add_friend(self, user_id: int, friend_id: int):
+        user = self._session.query(UserEntity).filter(UserEntity.id == user_id).first()
+        friend = self._session.query(UserEntity).filter(UserEntity.id == friend_id).first()
+        if not user or not friend:
+            return None  # Either user or friend doesn't exist
+        if friend not in user.friends:
+            user.friends.append(friend)
+            self._session.commit()
+        return user
+    
+    def remove_friend(self, user_id: int, friend_id: int):
+        user = self._session.query(UserEntity).filter(UserEntity.id == user_id).first()
+        friend = self._session.query(UserEntity).filter(UserEntity.id == friend_id).first()
+        if not user or not friend:
+            return None  # Either user or friend doesn't exist
+        if friend in user.friends:
+            user.friends.remove(friend)
+            self._session.commit()
+        return user
+    
+    def get_friends(self, user_id: int):
+        user = self._session.query(UserEntity).filter(UserEntity.id == user_id).first()
+        if not user:
+            return None  # User doesn't exist
+        return user.friends
+    
+    def edit_profile(self, user_id: int, bio: str = None, tags: list = None, location: str = None):
+        user = self._session.query(UserEntity).filter(UserEntity.id == user_id).first()
+        if not user:
+            return None  # User doesn't exist
+        if bio is not None:
+            user.bio = bio
+        if location is not None:
+            user.location = location
+        if tags is not None:
+            all_tags = {tag.name: tag for tag in self._session.query(TagEntity).all()}
+            tags_to_add = [all_tags[tag_name] for tag_name in tags if tag_name in all_tags]
+            user.tags = tags_to_add
+        self._session.commit()
+        return user
+    
+    def get_friends(self, user_id) -> list[User]:
+        user = self._session.query(UserEntity).filter(UserEntity.id == user_id).first()
+        if not user:
+            return None  # User doesn't exist
+        return user.friends
+
+    def get_user_by_username(self, username: str):
+        return self._session.query(UserEntity).filter(UserEntity.username == username).first()
+
+    def add_favorite(self, user_id: int, place: Place):
+        place_entity = self._service.query(PlaceEntity).filter(PlaceEntity.name == place.name, PlaceEntity.location == place.location).first()
+        if not place_entity:
+            place_svc = PlaceService()
+            place_svc.add_place(place)
+            
+        user = self._session.query(UserEntity).filter(UserEntity.id == user_id).first()
+        if not user:
+            raise Exception("User not found")
         
-        
+        if place not in user.favorites:
+            user.favorites.append(place)
+            self._session.commit()

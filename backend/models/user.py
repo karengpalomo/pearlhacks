@@ -18,3 +18,4 @@ class User(BaseModel):
     bio: str = ""
     tags: list['Tag'] = []
     friends: list['User'] = []
+    favorites: list['Place'] = []

@@ -7,6 +7,7 @@ from backend.models.user import User
 from backend.entities.entity_base import EntityBase
 from backend.entities.user_tag_entity import user_tag_table
 from backend.entities.user_friend_entity import user_friend_table
+from backend.entities.user_favorites_entity import user_favorites_table
 
 
 class UserEntity(EntityBase):
@@ -35,6 +36,9 @@ class UserEntity(EntityBase):
                            primaryjoin=id == user_friend_table.c.user_id,
                            secondaryjoin=id == user_friend_table.c.friend_id,
                            backref='user_friends')
+    favorites = relationship('PlaceEntity',
+                             secondary=user_favorites_table,
+                             back_populates='favorited_by')
     
 
     @classmethod
