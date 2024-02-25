@@ -4,4 +4,4 @@ conn = psycopg2.connect(conn_string)
 
 with conn:
     with conn.cursor() as curs:
-        curs.execute("DROP TABLE pearl;")
+        curs.execute("")
