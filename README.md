@@ -1,3 +1,3 @@
 # Discovera
-Pearl Hack submission for 2024
+Pearl Hacks submission for 2024
 Overall first place
